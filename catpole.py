@@ -34,4 +34,17 @@ class DQNAgent():
         return model
 
 
-    def build_distribution_model()
+    def build_distribution_model(self,state_size, num_atoms, action_size, learning_rate):
+        state_input = Input(shape=(state_size,))
+        x = Dense(32, input_shape=(state_size,), activation='relu')(state_input)
+        x = Dense(16, activation='relu')(x)
+        distribution_list = []
+        for i in range(action_size):
+            distribution_list.append(Dense(num_atoms, activation='softmax')(x))
+
+        model = Model(input=state_input, output=distribution_list)
+
+        adam = Adam(lr=learning_rate)
+        model.compile(loss='categorical_crossentropy',optimizer=adam)
+
+        return model
